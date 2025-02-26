@@ -1,7 +1,7 @@
 .dashboard-container {
     max-width: 800px;
     margin: 40px auto;
-    padding: 20px;
+    padding: 40px;
     background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -81,9 +81,10 @@
     text-overflow: ellipsis;
 }
 
-/* Updated edit and delete button positions */
+/* Updated Button Styles */
 .edit-btn,
-.delete-btn {
+.delete-btn,
+.share-btn {
     position: absolute;
     top: 10px;
     padding: 5px 10px;
@@ -95,13 +96,18 @@
 }
 
 .edit-btn {
-    right: 80px; /* Increased spacing */
+    right: 135px;
     background: #f4a261;
 }
 
 .delete-btn {
-    right: 10px;
+    right: 70px;
     background: #e76f51;
+}
+
+.share-btn {
+    right: 10px;
+    background: #28a745;
 }
 
 .edit-btn:hover {
@@ -110,4 +116,8 @@
 
 .delete-btn:hover {
     background: #d65a42;
+}
+
+.share-btn:hover {
+    background: #218838;
 }

@@ -34,6 +34,18 @@ const Dashboard = () => {
     setLinks(links.filter((_, i) => i !== index));
   };
 
+  const shareLink = (url) => {
+    navigator.clipboard.writeText(url);
+    alert("Link copied to clipboard!");
+  };
+
+  const openLink = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      url = "https://" + url; // Ensure URLs work properly
+    }
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="dashboard-container">
       {/* Input Section */}
@@ -64,19 +76,24 @@ const Dashboard = () => {
             key={index}
             className="link-card"
             whileHover={{ transform: "translateY(-5px)", boxShadow: "0px 15px 25px rgba(0, 0, 0, 0.2)" }}
+            onClick={() => openLink(link.url)}
           >
-            <p className="description-text">{link.description}</p>
-            <a href={link.url} target="_blank" rel="noopener noreferrer" className="link-text">
-              {link.url}
-            </a>
+            {/* Card Content */}
+            <div className="card-content">
+              <p className="description-text">{link.description}</p>
+              <p className="link-text">{link.url}</p>
+            </div>
 
-            {/* Button Container */}
+            {/* Buttons */}
             <div className="button-container">
-              <button className="edit-btn" onClick={() => editLink(index)}>
+              <button className="edit-btn" onClick={(e) => { e.stopPropagation(); editLink(index); }}>
                 Edit
               </button>
-              <button className="delete-btn" onClick={() => removeLink(index)}>
+              <button className="delete-btn" onClick={(e) => { e.stopPropagation(); removeLink(index); }}>
                 Delete
+              </button>
+              <button className="share-btn" onClick={(e) => { e.stopPropagation(); shareLink(link.url); }}>
+                Share
               </button>
             </div>
           </motion.div>
