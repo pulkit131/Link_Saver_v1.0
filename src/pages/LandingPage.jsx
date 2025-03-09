@@ -1,46 +1,43 @@
-import { useEffect } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
-  useEffect(() => {
-    // Load Google API script
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    document.body.appendChild(script);
+  const navigate = useNavigate();
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  const responseMessage = (response) => {
+    console.log("Google Login Success:", response);
+    navigate("/dashboard"); // Redirect to Dashboard after login
+  };
 
-  const handleGoogleLogin = () => {
-    window.google.accounts.id.initialize({
-      client_id: "YOUR_GOOGLE_CLIENT_ID",
-      callback: (response) => console.log("Google Login Response:", response),
-    });
-
-    window.google.accounts.id.prompt();
+  const errorMessage = (error) => {
+    console.log("Google Login Failed:", error);
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>Welcome to My Website</h1>
-      <p>This is a simple landing page. Customization coming soon!</p>
-      <button
-        onClick={handleGoogleLogin}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#4285F4",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          marginTop: "20px",
-        }}
-      >
-        Log in with Google
-      </button>
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      background: "linear-gradient(to right, #1E1E2A, #2D2D44)",
+      color: "#FFFFFF",
+      fontFamily: "Poppins, sans-serif",
+      textAlign: "center",
+    }}>
+      <h1 style={{ fontSize: "3rem", fontWeight: "bold", marginBottom: "10px" }}>
+        Welcome to My Website
+      </h1>
+      <p style={{ fontSize: "1.25rem", maxWidth: "600px", marginBottom: "20px" }}>
+        This is a beautifully styled landing page. Sign in with Google to explore more!
+      </p>
+      <div style={{
+        background: "#F47D4A",
+        padding: "10px 20px",
+        borderRadius: "8px",
+      }}>
+        <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+      </div>
     </div>
   );
 };
