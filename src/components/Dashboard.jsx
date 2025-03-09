@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import "./Dashboard.css";
 
@@ -7,9 +7,24 @@ const Dashboard = () => {
   const [newLink, setNewLink] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [editIndex, setEditIndex] = useState(null);
+  const inputRef = useRef(null);
+
+  // Load stored links from localStorage
+  useEffect(() => {
+    const storedLinks = JSON.parse(localStorage.getItem("links")) || [];
+    setLinks(storedLinks);
+  }, []);
+
+  // Save links to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem("links", JSON.stringify(links));
+  }, [links]);
 
   const addLink = () => {
-    if (!newLink.trim() || !newDescription.trim()) return;
+    if (!newLink.trim() || !newDescription.trim()) {
+      alert("Both fields are required!");
+      return;
+    }
 
     if (editIndex !== null) {
       const updatedLinks = [...links];
@@ -22,12 +37,14 @@ const Dashboard = () => {
 
     setNewLink("");
     setNewDescription("");
+    inputRef.current.focus();
   };
 
   const editLink = (index) => {
     setNewLink(links[index].url);
     setNewDescription(links[index].description);
     setEditIndex(index);
+    inputRef.current.focus();
   };
 
   const removeLink = (index) => {
@@ -41,7 +58,7 @@ const Dashboard = () => {
 
   const openLink = (url) => {
     if (!/^https?:\/\//i.test(url)) {
-      url = "https://" + url; // Ensure URLs work properly
+      url = "https://" + url;
     }
     window.open(url, "_blank");
   };
@@ -49,13 +66,19 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       {/* Input Section */}
-      <div className="input-section">
+      <motion.div
+        className="input-section"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <input
           type="text"
           placeholder="Enter Link"
           value={newLink}
           onChange={(e) => setNewLink(e.target.value)}
           className="input-field"
+          ref={inputRef}
         />
         <input
           type="text"
@@ -67,7 +90,7 @@ const Dashboard = () => {
         <button className="action-button" onClick={addLink}>
           {editIndex !== null ? "Update" : "Save"}
         </button>
-      </div>
+      </motion.div>
 
       {/* Cards Section */}
       <div className="cards-container">
@@ -75,7 +98,8 @@ const Dashboard = () => {
           <motion.div
             key={index}
             className="link-card"
-            whileHover={{ transform: "translateY(-5px)", boxShadow: "0px 15px 25px rgba(0, 0, 0, 0.2)" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => openLink(link.url)}
           >
             {/* Card Content */}
